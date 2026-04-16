@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aryan Shukla — Full Stack Dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cyan: #00f5ff;
+    --magenta: #ff006e;
+    --green: #00ff9d;
+    --dark: #020b14;
+    --card: #060f1a;
+    --border: rgba(0,245,255,0.18);
+    --text: #c8e8f0;
+    --muted: #4a7a8a;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* SCANLINES overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 40px;
+    background: rgba(2,11,20,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--cyan);
+    font-size: 18px;
+    letter-spacing: 2px;
+  }
+  .nav-logo span { color: var(--magenta); }
+  nav ul { list-style: none; display: flex; gap: 28px; }
+  nav ul li a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  nav ul li a:hover { color: var(--cyan); }
+
+  /* SECTION WRAPPER */
+  section { padding: 80px 40px; max-width: 1000px; margin: 0 auto; }
+
+  /* HERO */
+  #hero {
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--cyan);
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+  .hero-name {
+    font-size: clamp(44px, 7vw, 80px);
+    font-weight: 700;
+    line-height: 1.05;
+    color: #fff;
+    letter-spacing: -1px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s forwards;
+  }
+  .hero-name .accent { color: var(--cyan); }
+  .hero-name .accent2 { color: var(--magenta); }
+  .hero-subtitle {
+    font-size: 20px;
+    color: var(--text);
+    margin: 20px 0 32px;
+    max-width: 600px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.6s forwards;
+  }
+  .hero-subtitle strong { color: var(--green); }
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.8s forwards;
+  }
+  .btn {
+    padding: 12px 28px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--cyan);
+    color: var(--dark);
+    border: none;
+  }
+  .btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 0 20px rgba(0,245,255,0.4); }
+  .btn-outline {
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan);
+  }
+  .btn-outline:hover { background: rgba(0,245,255,0.08); transform: translateY(-2px); }
+
+  /* Grid BG for hero */
+  .grid-bg {
+    position: absolute;
+    top: 0; right: -40px; bottom: 0;
+    width: 50%;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: -1;
+    mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+    -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6), transparent);
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .section-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    color: var(--magenta);
+    letter-spacing: 2px;
+  }
+  .section-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 28px;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+    overflow: hidden;
+  }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, var(--cyan), var(--magenta));
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .project-card:hover { border-color: rgba(0,245,255,0.5); transform: translateY(-4px); }
+  .project-card:hover::before { opacity: 1; }
+  .project-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+  .project-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .project-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tech-pill {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+  .project-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .project-link {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    text-decoration: none;
+    letter-spacing: 1px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .project-link:hover { border-color: var(--cyan); }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .skill-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px;
+  }
+  .skill-group-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--magenta);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .skill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    flex-shrink: 0;
+    box-shadow: 0 0 6px var(--cyan);
+  }
+  .skill-item span {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    min-width: 120px;
+  }
+  .skill-bar-wrap {
+    flex: 1;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .skill-bar {
+    height: 100%;
+    background: linear-gradient(to right, var(--cyan), var(--magenta));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* CONTACT */
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .contact-info h3 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .contact-info p {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    line-height: 1.7;
+  }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .contact-link:hover { color: var(--cyan); }
+  .contact-link-icon {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--magenta);
+    width: 70px;
+    letter-spacing: 1px;
+  }
+  .contact-form { display: flex; flex-direction: column; gap: 14px; }
+  .contact-form input,
+  .contact-form textarea {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 16px;
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    resize: none;
+  }
+  .contact-form input::placeholder,
+  .contact-form textarea::placeholder { color: var(--muted); }
+  .contact-form input:focus,
+  .contact-form textarea:focus { border-color: var(--cyan); }
+  .contact-form textarea { height: 120px; }
+  .contact-form .btn { width: 100%; text-align: center; font-family: 'Rajdhani', sans-serif; }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px 40px;
+    border-top: 1px solid var(--border);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+  }
+  footer span { color: var(--cyan); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s, transform 0.5s;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* BLINK CURSOR */
+  .cursor::after {
+    content: '_';
+    color: var(--cyan);
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    nav ul { display: none; }
+    section { padding: 60px 20px; }
+    #hero { padding: 60px 20px; min-height: auto; padding-top: 100px; }
+    .contact-wrap { grid-template-columns: 1fr; }
+    footer { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AS<span>.</span>DEV</div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO / ABOUT -->
+<div id="about">
+  <section id="hero">
+    <div class="grid-bg"></div>
+    <div class="hero-tag">> INITIALIZING PROFILE...</div>
+    <h1 class="hero-name">
+      ARYAN<br>
+      <span class="accent">SHUKLA</span><span class="accent2">.</span>
+    </h1>
+    <p class="hero-subtitle">
+      B.Tech CSE &nbsp;·&nbsp; <strong>Full Stack Dev</strong> &nbsp;·&nbsp; Gen-AI &nbsp;·&nbsp; AWS &nbsp;·&nbsp; DevOps
+      <br>Building scalable systems and intelligent applications<span class="cursor"></span>
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#projects">View Projects</a>
+      <a class="btn btn-outline" href="#contact">Get In Touch</a>
+    </div>
+  </section>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-header reveal">
+    <span class="section-num">01.</span>
+    <h2 class="section-title">Projects</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="projects-grid">
+
+    <!-- Project 1 — edit this -->
+    <div class="project-card reveal">
+      <div class="project-tag">FULL STACK</div>
+      <div class="project-name">Zomato based reel application</div>
+      <p class="project-desc">Node.js/Express.js backend with RESTful APIs for auth, video reel uploads, likes, comments, and restaurant metadata.
+Integrated ImageKit CDN, optimized MongoDB schemas with indexing, and implemented JWT authentication with
+centralized error handling.</p>
+      <div class="project-stack">
+        <span class="tech-pill">React</span>
+        <span class="tech-pill">Node.js</span>
+        <span class="tech-pill">Imagekit</span>
+        <span class="tech-pill">MongoDB</span>
+      </div>
+      <div class="project-links">
+        <a class="project-link" href="#">[ GITHUB ]</a>
+        <a class="project-link" href="#">[ LIVE DEMO ]</a>
+      </div>
+    </div>
+
+    <!-- Project 2 — edit this -->
+    <div class="project-card reveal">
+      <div class="project-tag">GEN-AI</div>
+      <div class="project-name">AI-Powered Customer Churn Prediction & Explainability System
+</div>
+      <p class="project-desc">Streamlit-based churn prediction app integrated with Generative AI for real-time predictions, explainability, and automated
+retention strategy generation</p>
+      <div class="project-stack">
+        <span class="tech-pill">Scikit-learn</span>
+        <span class="tech-pill">Tensorflow</span>
+        <span class="tech-pill">Pandas,numpy,Matplotlib</span>
+        <span class="tech-pill">tensorboard</span>
+      </div>
+      <div class="project-links">
+        <a class="project-link" href="#">[ GITHUB ]</a>
+        <a class="project-link" href="#">[ LIVE DEMO ]</a>
+      </div>
+    </div>
+
+    <!-- Project 3 — edit this -->
+    <div class="project-card reveal">
+      <div class="project-tag">GEN-AI</div>
+      <div class="project-name">Multimodal URL Summarizer (YouTube & Web Articles)</div>
+      <p class="project-desc">Production-ready GenAI app that ingests YouTube links and website URLs, extracts transcripts and article content, and
+generates concise, query-aware summaries with citations and topic-wise outlines using LLM-based NLP and information
+retrieval techniques.</p>
+      <div class="project-stack">
+        <span class="tech-pill">LangChain</span>
+        <span class="tech-pill">Groq-API</span>
+        <span class="tech-pill">Streamlit</span>
+        <span class="tech-pill">HuggingFace</span>
+      </div>
+      <div class="project-links">
+        <a class="project-link" href="#">[ GITHUB ]</a>
+        <a class="project-link" href="#">[ LIVE DEMO ]</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<div style="background: rgba(0,245,255,0.015); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+<section id="skills" style="max-width:1000px;">
+  <div class="section-header reveal">
+    <span class="section-num">02.</span>
+    <h2 class="section-title">Skills</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="skills-grid">
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">FRONTEND</div>
+      <div class="skill-item"><span class="skill-dot"></span><span>React / Next.js</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="90%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>TypeScript</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="82%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>Tailwind CSS</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="88%"></div></div></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">BACKEND</div>
+      <div class="skill-item"><span class="skill-dot"></span><span>Node.js</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="88%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>Python / FastAPI</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="85%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>PostgreSQL</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="78%"></div></div></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">CLOUD & DEVOPS</div>
+      <div class="skill-item"><span class="skill-dot"></span><span>AWS</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="83%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>Docker / K8s</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="80%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>CI/CD Pipelines</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="85%"></div></div></div>
+    </div>
+
+    <div class="skill-group reveal">
+      <div class="skill-group-title">GEN-AI</div>
+      <div class="skill-item"><span class="skill-dot"></span><span>LangChain</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="82%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>RAG Systems</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="78%"></div></div></div>
+      <div class="skill-item"><span class="skill-dot"></span><span>OpenAI / Anthropic</span><div class="skill-bar-wrap"><div class="skill-bar" data-w="86%"></div></div></div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header reveal">
+    <span class="section-num">03.</span>
+    <h2 class="section-title">Contact</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="contact-wrap">
+    <div class="contact-info reveal">
+      <h3>Let's build something.</h3>
+      <p>Open to full-time roles, freelance projects, and exciting collaborations. Drop a message or connect on any platform.</p>
+      <!-- Update these links with your real profiles -->
+      <a class="contact-link" href="mailto:aryan.shukla@email.com">
+        <span class="contact-link-icon">EMAIL</span>
+        aryan.shukla@email.com
+      </a>
+      <a class="contact-link" href="https://github.com/aryanshukla" target="_blank">
+        <span class="contact-link-icon">GITHUB</span>
+        github.com/aryanshukla
+      </a>
+      <a class="contact-link" href="https://linkedin.com/in/aryanshukla" target="_blank">
+        <span class="contact-link-icon">LINKEDIN</span>
+        linkedin.com/in/aryanshukla
+      </a>
+    </div>
+    <div class="contact-form reveal">
+      <input type="text" placeholder="Your Name" />
+      <input type="email" placeholder="Your Email" />
+      <textarea placeholder="Your Message"></textarea>
+      <button class="btn btn-primary">SEND MESSAGE</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>ARYAN SHUKLA</span> &nbsp;·&nbsp; BUILT WITH CODE &amp; CAFFEINE &nbsp;·&nbsp; 2025
+</footer>
+
+<script>
+  // Scroll reveal + skill bar animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+          entry.target.querySelectorAll('.skill-bar').forEach(bar => {
+            bar.style.width = bar.dataset.w;
+          });
+        }, i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
